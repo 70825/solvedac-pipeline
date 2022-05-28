@@ -1,4 +1,4 @@
-from solvedac_api.postgredb import solvedac_DB
+from database.postgresql import postgresql
 import requests
 import json
 import time
@@ -11,7 +11,7 @@ import time
 
 class basic_crawling:
     def __init__(self):
-        self.database = solvedac_DB()
+        self.database = postgresql()
         self.user_count = 1
 
     def filterProblem(self, number):

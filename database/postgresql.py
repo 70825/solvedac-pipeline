@@ -1,6 +1,7 @@
 import psycopg2
 
-class solvedac_DB():
+
+class postgresql:
     def __init__(self):
         self.database = psycopg2.connect(host='localhost',
                                          dbname='solvedac',
