@@ -3,7 +3,7 @@ import pymongo
 class mongodb():
     def __init__(self):
         self.client = pymongo.MongoClient(host='localhost', port=27017)
-        self.database = self.client['solvedac_user']
+        self.database = self.client['solvedac']
         self.user = self.database['user']
         self.problem = self.database['problem']
 
