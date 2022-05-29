@@ -1,9 +1,8 @@
-import json
-
 from database.postgresql import postgresql
 from kafka_file.producer import producer
 import requests
 import time
+import json
 
 
 class adv_crawling:
@@ -163,23 +162,23 @@ class adv_crawling:
     * 유저가 풀은 문제 리스트가 postgresql에 저장한 시점과 다를 경우가 존재함
     * 이런 경우 postgrsql에 있는 번호만 나중에 처리하려고 저장한 것임
     '''
-    def searchProblemNumber(self):
+    def sendProblemNumber(self):
         query = "SELECT num FROM problemID"
         problem_number = self.database.readQuery(query=query)
 
         for p_num in problem_number:
-            data = self.getInfoProblem(p_num)
+            data = self.getInfoProblem(p_num[0])
             self.sendProducerInfoProblem(data)
 
     '''
     postgresql에서 저장된 유저 이름을 찾고, 유저에 대한 정보를 kafka에 전송
     '''
-    def searchUserName(self):
+    def sendUserName(self):
         query = "SELECT name FROM userID"
         user_name = self.database.readQuery(query=query)
 
         for u_name in user_name:
             user_data = {}
-            user_data.update(self.getBasicInfoUser(u_name))
-            user_data.update(self.getSolvedProblemPageFromUser(u_name))
+            user_data.update(self.getBasicInfoUser(u_name[0]))
+            user_data.update(self.getSolvedProblemPageFromUser(u_name[0]))
             self.sendProducerInfoUser(user_data)
