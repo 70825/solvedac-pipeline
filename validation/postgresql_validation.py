@@ -6,15 +6,29 @@ class postgresql_validation(postgresql):
     def user_validation(self, df):
         query = 'SELECT * FROM userID'
         result_query = self.readQuery(query)
-        sql_df = pd.DataFrame({'id': result_query['id'], 'userId': result_query['userId']})
+        if result_query == []:
+            sql_df = pd.DataFrame({'index': [], 'name': []})
+        else:
+            index, name = [], []
+            for idx, uname in result_query:
+                index.append(idx)
+                name.append(uname)
+            sql_df = pd.DataFrame({'index': index, 'name': name})
         df = pd.concat((df, sql_df))
 
-        return df['userId'].is_unique
+        return df['name'].is_unique
 
     def problem_validation(self, df):
         query = 'SELECT * FROM problemID'
         result_query = self.readQuery(query)
-        sql_df = pd.DataFrame({'id': result_query['id'], 'userId': result_query['problemId']})
+        if result_query == []:
+            sql_df = pd.DataFrame({'index': [], 'num': []})
+        else:
+            index, num = [], []
+            for idx, pnum in result_query:
+                index.append(idx)
+                num.append(pnum)
+            sql_df = pd.DataFrame({'index': index, 'num': num})
         df = pd.concat((df, sql_df))
 
-        return df['problemId'].is_unique
+        return df['num'].is_unique

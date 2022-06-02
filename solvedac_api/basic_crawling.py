@@ -15,7 +15,6 @@ class basic_crawling:
     def __init__(self):
         self.database = postgresql()
         self.validation = postgresql_validation()
-        self.user_count = 1
 
     def filterProblem(self, number):
         url = f"https://solved.ac/api/v3/problem/show?problemId={number}"
@@ -33,14 +32,16 @@ class basic_crawling:
             return 1
         return 0
 
-    def insertProblemNumber(self):
-        count = 1
-        for i in range(1000, 25024):
+    def insertProblemNumber(self, s=1000, e=25024):
+        count = self.database.findMaxIndex(True)
+
+        for i in range(s, e):
             if self.filterProblem(i):
-                validation_df = pd.DataFrame({'id': count, 'problemID': i})
+                validation_df = pd.DataFrame({'index': [count], 'num': [i]})
                 if self.validation.problem_validation(validation_df):
                     query = f"INSERT INTO problemID VALUES ({count}, {i})"
                     self.database.insertQuery(query=query)
+                    count += 1
 
     def filterUser(self, page):
         filter_list = []
@@ -57,17 +58,20 @@ class basic_crawling:
 
         for i in range(len(info['items'])):
             if 5 < info['items'][i]['tier'] <= 15:
-                filter_list.append([self.user_count, info['items'][i]['handle']])
-                self.user_count += 1
+                filter_list.append(info['items'][i]['handle'])
 
         return filter_list
 
-    def insertUserName(self):
-        for i in range(1, 1000):
-            user_name_list = self.filterUser(i)
+    def insertUserName(self, s=1, e=1000):
+        count = self.database.findMaxIndex(False)
 
-            for idx, name in user_name_list:
-                validation_df = pd.DataFrame({'id': idx, 'userId': name})
+        for i in range(s, e):
+            if e == 1000: user_name_list = self.filterUser(i)
+            else: user_name_list = self.filterUser(i)[:5]
+
+            for name in user_name_list:
+                validation_df = pd.DataFrame({'index': [count], 'name': [name]})
                 if self.validation.user_validation(validation_df):
-                    query = f"INSERT INTO userID VALUES ({idx}, '{name}')"
+                    query = f"INSERT INTO userID VALUES ({count}, '{name}')"
                     self.database.insertQuery(query)
+                    count += 1

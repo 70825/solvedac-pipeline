@@ -22,3 +22,19 @@ class postgresql:
     def insertQuery(self, query):
         self.cursor.execute(query)
         self.database.commit()
+
+    def findMaxIndex(self, flags):
+        '''
+        :param flags: True -> problem, False -> user
+        :return:
+        '''
+        target = 'problemid' if flags else 'userid'
+        query = f'select max(index) from {target}'
+        self.cursor.execute(query)
+        count = self.cursor.fetchall()[0][0]
+
+        if count == None: count = 1
+        else: count += 1
+
+        return count
+
