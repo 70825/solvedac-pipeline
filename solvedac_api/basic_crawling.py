@@ -1,4 +1,6 @@
 from database.postgresql import postgresql
+from validation.postgresql_validation import postgresql_validation
+import pandas as pd
 import requests
 import json
 import time
@@ -12,6 +14,7 @@ import time
 class basic_crawling:
     def __init__(self):
         self.database = postgresql()
+        self.validation = postgresql_validation()
         self.user_count = 1
 
     def filterProblem(self, number):
@@ -34,8 +37,10 @@ class basic_crawling:
         count = 1
         for i in range(1000, 25024):
             if self.filterProblem(i):
-                query = f"INSERT INTO problemID VALUES ({count}, {i})"
-                self.database.insertQuery(query=query)
+                validation_df = pd.DataFrame({'id': count, 'problemID': i})
+                if self.validation.problem_validation(validation_df):
+                    query = f"INSERT INTO problemID VALUES ({count}, {i})"
+                    self.database.insertQuery(query=query)
 
     def filterUser(self, page):
         filter_list = []
@@ -62,5 +67,7 @@ class basic_crawling:
             user_name_list = self.filterUser(i)
 
             for idx, name in user_name_list:
-                query = f"INSERT INTO userID VALUES ({idx}, '{name}')"
-                self.database.insertQuery(query)
+                validation_df = pd.DataFrame({'id': idx, 'userId': name})
+                if self.validation.user_validation(validation_df):
+                    query = f"INSERT INTO userID VALUES ({idx}, '{name}')"
+                    self.database.insertQuery(query)
