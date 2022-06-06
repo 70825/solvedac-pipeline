@@ -1,16 +1,14 @@
 from solvedac_api.basic_crawling import basic_crawling
-from solvedac_api.adv_crawling import adv_crawling
 import unittest
 
-# solvedac 데이터가 제대로 들어오는지
-class My(unittest.TestCase):
 
-    '''
-    basic_crawling
-    test_correct_problem: BOJ 1000번 문제를 가져오면 문제가 존재하므로 1이 나오는지 확인
-    test_uncorrect_problem: BOJ 999번 문제를 가져오면 정보가 없으므로 0이 나오는지 확인
-    test_filter_user_list: 랭킹 200페이지에 있는 유저 100명의 정보를 제대로 가져오는지 확인
-    '''
+'''
+basic_crawling
+test_correct_problem: BOJ 1000번 문제를 가져오면 문제가 존재하므로 1이 나오는지 확인
+test_uncorrect_problem: BOJ 999번 문제를 가져오면 정보가 없으므로 0이 나오는지 확인
+test_filter_user_list: 랭킹 200페이지에 있는 유저 100명의 정보를 제대로 가져오는지 확인
+'''
+class test_basic_crawling(unittest.TestCase):
     def test_correct_problem(self):
         bc = basic_crawling()
         existProblemValue = bc.filterProblem(1000)
