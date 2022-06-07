@@ -9,7 +9,7 @@ class adv_crawling:
 
     def __init__(self):
         self.database = postgresql()
-        self.producer = producer()
+        self.producer = None
 
 
     '''
@@ -142,11 +142,17 @@ class adv_crawling:
         # 리스트로 반환하고, getSolvedProblemPageFromUser에서 dict로 변환
         return solved_problem_number
 
+    '''
+    kafka proucer 연결
+    '''
+    def connectKafkaProducer(self):
+        self.producer = producer()
 
     '''
     문제 정보를 kafka에 보내기
     '''
     def sendProducerInfoProblem(self, data):
+        self.connectKafkaProducer()
         self.producer.send("problemInfo", data)
 
 
@@ -154,6 +160,7 @@ class adv_crawling:
     유저 정보를 kafka에 보내기
     '''
     def sendProducerInfoUser(self, data):
+        self.connectKafkaProducer()
         self.producer.send("userInfo", data)
 
 

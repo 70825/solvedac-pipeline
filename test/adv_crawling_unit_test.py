@@ -2,7 +2,7 @@ from solvedac_api.adv_crawling import adv_crawling
 import unittest
 
 '''
-test_adv_crawling (kafka 실행 필수)
+test_adv_crawling
 
 test_correct_info_problem: 1000번 문제를 가지고와서 1000, A+B, 브론즈5, 유형들이 정확한지 확인
 test_not_exist_info_problem: 999번 문제는 존재하지 않으니 None을 반환하는지 확인
