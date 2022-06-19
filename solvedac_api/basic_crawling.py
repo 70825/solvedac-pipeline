@@ -63,8 +63,8 @@ class basic_crawling:
         start_page, end_page = 0, 0
 
         # start_page 설정
-        s, e = 1, 100000
-        while s + 1 < e:
+        s, e = 1, 719
+        while s + 1 <= e:
             mid_page = (s + e) // 2
 
             url = f"https://solved.ac/api/v3/ranking/tier?page={mid_page}"
@@ -74,22 +74,24 @@ class basic_crawling:
                 time.sleep(30)
                 r_tier_user = requests.get(url)
 
-            info = json.loads(r_tier_user.content.decode('utf-8'))['items']
+            info = json.loads(r_tier_user.content.decode('utf-8'))
+            first_user_tier = int(info['items'][0]['tier'])
+            last_user_tier = int(info['items'][-1]['tier'])
 
             # 첫번째 유저의 티어가 startTier보다 작은 경우, 해당 리스트에 있는 모든 유저는 티어가 startTier보다 작으므로 볼 필요가 없다.
-            if info['items'][0]['tier'] < startTier:
+            if first_user_tier < startTier:
                 e = mid_page
                 continue
 
             # 첫번째 유저의 티어가 startTier와 같은 경우, 현재 페이지가 시작 페이지가 아닐 수도 있으니 다시 탐색한다.
-            if info['items'][0]['tier'] == startTier:
+            if first_user_tier == startTier:
                 e = mid_page
                 start_page = mid_page
                 continue
 
             # 첫번째 유저의 티어가 startTier보다 작은 경우, 마지막 티어의 유저가 startTier보다 크거나 같으면 해당 페이지, 작으면 더 탐색한다.
-            if info['items'][0]['tier'] > startTier:
-                if info['items'][-1]['tier'] <= startTier:
+            if first_user_tier > startTier:
+                if last_user_tier <= startTier:
                     start_page = mid_page
                     break
                 else:
@@ -97,8 +99,8 @@ class basic_crawling:
                     continue
 
         # end_page 설정
-        s, e = 1, 100000
-        while s + 1 < e:
+        s, e = 1, 719
+        while s + 1 <= e:
             mid_page = (s + e) // 2
 
             url = f"https://solved.ac/api/v3/ranking/tier?page={mid_page}"
@@ -108,22 +110,24 @@ class basic_crawling:
                 time.sleep(30)
                 r_tier_user = requests.get(url)
 
-            info = json.loads(r_tier_user.content.decode('utf-8'))['items']
+            info = json.loads(r_tier_user.content.decode('utf-8'))
+            first_user_tier = int(info['items'][0]['tier'])
+            last_user_tier = int(info['items'][-1]['tier'])
 
             # 마지막 유저의 티어가 endTier보다 큰 경우, 해당 리스트에 있는 모든 유저는 티어가 endTier보다 크므로 나머지는 볼 필요가 없다.
-            if info['items'][-1]['tier'] > endTier:
+            if last_user_tier > endTier:
                 s = mid_page
                 continue
 
             # 마지막 유저의 티어가 endTier와 같은 경우, 현재 페이지가 마지막 페이지가 아닐 수도 있으니 다시 탐색한다.
-            if info['items'][-1]['tier'] == endTier:
+            if last_user_tier == endTier:
                 s = mid_page
                 end_page = mid_page
                 continue
 
             # 마지막 유저의 티어가 endTier보다 작은 경우, 첫번째 유저의 티어가 endTier보다 크거나 같으면 해당 페이지, 아니면 더 탐색한다.
-            if info['items'][-1]['tier'] < endTier:
-                if info['items'][0]['tier'] >= endTier:
+            if last_user_tier < endTier:
+                if first_user_tier >= endTier:
                     end_page = mid_page
                     break
                 else:
