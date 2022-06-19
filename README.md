@@ -1,6 +1,7 @@
 # 🧩solvedac-pipeline
 - solved.ac API를 사용한 간단한 데이터 파이프라인을 제작
-- 특정 티어에 속한 유저와 문제 정보를 데이터베이스에 저장
+- 특정 티어 구간에 속한 유저 정보 혹은 특정 랭킹 페이지 구간에 속하는 유저 정보를 데이터베이스에 저장
+- 특정 문제 구간에 속한 문제 정보를 데이터베이스에 저장
 
 ## 🛠️ 데이터 파이프라인
 ![image](https://user-images.githubusercontent.com/79046106/170855003-bd66c67f-8a2b-447f-aaf4-a96de8ddd39b.png)
